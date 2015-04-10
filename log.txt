@@ -1,0 +1,11 @@
+2015-04-10 18:55:18
+重开写，当前目标如下：
+GUI，读取enos的文件夹结构，以list形式显示，快捷键navigation，选定txt后调用vim打开编辑
+
+2015-04-10 19:25:16
+设想一下操作：
+quick-console 呼出 eno 之后是一个窗口，上方是 enos 的 list，下方是一行 console
+默认focus在console中，可以输入 el, eno 这种直接打开相应的 txt，也可以输入;切换到navigation模式，focus在list上，显示每个item的快捷键(类似vimimum中按f之后的效果)
+
+2015-04-10 19:35:24
+呃...还是用ListView + LineEdit 好了
