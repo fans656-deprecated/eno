@@ -98,7 +98,7 @@ class View(QListWidget):
 
     def openFile(self, path):
         print u'open file {}'.format(path)
-        subprocess.call(u'gvim {}'.format(path).encode('gbk'), shell=True)
+        subprocess.call(u'gvim "{}"'.format(path).encode('gbk'), shell=True)
 
     def keyPressEvent(self, ev):
         ch = ev.text()
