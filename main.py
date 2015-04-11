@@ -1,5 +1,4 @@
 import sys
-import subprocess
 
 from PySide.QtGui import *
 from PySide.QtCore import *

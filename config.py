@@ -8,3 +8,4 @@ ch_prev = 'k'
 ch_next = 'j'
 ch_up = ','
 ch_enter = '.'
+chars = "ABCDEFGHILMNOPQRSTUVWXYZ"

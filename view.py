@@ -1,8 +1,8 @@
 # coding: utf-8
-
 import os
 import itertools
 import re
+import subprocess
 
 from PySide.QtGui import *
 from PySide.QtCore import *
@@ -13,11 +13,10 @@ def isIgnored(f):
     return any((lambda r: re.match(r, f))(r) for r in config.ignores)
 
 def hotkeys(dirs, files):
-    chars = "ABCDEFGHILMNOPQRSTUVWXYZ"
     def gen():
         n = 1
         while True:
-            for t in itertools.permutations(chars, n):
+            for t in itertools.permutations(config.chars, n):
                 yield ''.join(list(t))
             n += 1
     g = gen()
@@ -38,6 +37,7 @@ class View(QListWidget):
         self.setFont(QFont('Inconsolata', 14))
         self.basepath = path
         self.enterDir(self.basepath)
+        self.partialHotkeys = ''
 
     def enterDir(self, path):
         self.curpath = path
@@ -102,7 +102,17 @@ class View(QListWidget):
 
     def keyPressEvent(self, ev):
         ch = ev.text()
-        if ch == config.ch_switch_focus:
+        if ch and ch.upper() in config.chars:
+            result, i = self.checkHotkey(ch)
+            if result == 'match':
+                self.partialHotkeys = ''
+                self.setCurrentRow(i)
+                self.enter()
+            elif result == 'prefix':
+                self.partialHotkeys += ch
+            else:
+                self.partialHotkeys = ''
+        elif ch == config.ch_switch_focus:
             self.focusOut.emit()
         elif ch == config.ch_prev:
             self.navPrev()
@@ -114,6 +124,15 @@ class View(QListWidget):
             self.enter()
         else:
             super(View, self).keyPressEvent(ev)
+
+    def checkHotkey(self, ch):
+        s = (self.partialHotkeys + ch).strip().upper()
+        for i, hk in enumerate(self.hotkeys):
+            if hk.startswith(s):
+                if hk == s:
+                    return 'match', i
+                return 'prefix', i
+        return 'miss', -1
 
     def focusInEvent(self, ev):
         self.setStyleSheet('QListWidget{background: #B5BDFF}')
