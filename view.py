@@ -1,13 +1,33 @@
+# coding: utf-8
+
 import os
+import itertools
+import re
 
 from PySide.QtGui import *
 from PySide.QtCore import *
 
 import config
-import re
 
 def isIgnored(f):
     return any((lambda r: re.match(r, f))(r) for r in config.ignores)
+
+def hotkeys(dirs, files):
+    chars = "ABCDEFGHILMNOPQRSTUVWXYZ"
+    def gen():
+        n = 1
+        while True:
+            for t in itertools.permutations(chars, n):
+                yield ''.join(list(t))
+            n += 1
+    g = gen()
+    v = lambda _: g.next()
+    files, dirs = map(v, files), map(v, dirs)
+    ts = list(reversed(dirs)) + files
+    tlen = max(map(len, ts))
+    ts = [' ' * (tlen - len(t)) + t for t in ts]
+    for t in ts:
+        yield t
 
 class View(QListWidget):
 
@@ -39,12 +59,14 @@ class View(QListWidget):
         self.files = files
         self.items = dirs + files
         self.clear()
+        self.hotkeys = map(lambda t: t.strip(), list(hotkeys(dirs, files)))
+        hks = hotkeys(dirs, files)
         for name, path in dirs:
-            self.addItem('/' + name)
+            self.addItem(u'【{}】'.format(next(hks)) + '/' + name)
         for name, path in files:
             if name.endswith('txt'):
                 name = name[:-4]
-            self.addItem(name)
+            self.addItem(u'【{}】'.format(next(hks)) + name)
         self.nDirs = len(dirs)
         self.nFiles = len(files)
         self.nTotal = self.nDirs + self.nFiles
