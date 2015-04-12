@@ -18,3 +18,33 @@
 1. 背景色
 2. line-wrap
 3. 行号(相对)
+
+2015-04-12 15:56:54
+goal: frameless window
+
+忘了怎么弄的了，去看看quick-console
+恩，widget.__init__(parent, Qt.FramelessWindowHint)
+
+
+goal: window title
+self.setWindowTitle('eno')
+
+
+goal: 初始停靠在左下角
+记得以前尝试过，似乎没有可靠的方案？呃，记录窗口位置还是不错的
+不过先试试能不能直接得到taskbar的geometry
+恩，QApplication.dekstop() 得到一个 QDesktopWidget
+然后 w.availableGeometry() 得到 exclude taskbar 的 QRect
+
+
+goal: 背景色
+w.setStyleSheet('QWidget { background: #002B36; }')
+
+goal: 边框
+    pen = painter.pen()
+    pen.setColor('#abcdef')
+    painter.setPen(pen)
+    painter.drawRect(self.rect())
+    
+goal: 显示文字
+这个比较复杂了，涉及到text layout可能，，先commit一次吧
