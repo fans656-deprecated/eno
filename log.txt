@@ -48,3 +48,18 @@ goal: 边框
     
 goal: 显示文字
 这个比较复杂了，涉及到text layout可能，，先commit一次吧
+NM... 又感觉要去跋涉QTextDocument的源码了..
+不过这次先把一个静态的效果弄出来吧：
+字体+白色
+
+2015-04-12 17:15:05
+我擦.. QTextDocument 用常识性的api怎么都调不了颜色和字体...
+
+aha!! 用 QTextCusor::insertText(text, fmt) 就可以啦~~
+
+2015-04-12 18:10:16
+呃，可以显示了，，但是Inconsolata字体渲染有问题，，奇怪的别的字体ok，别的程序渲染Inconsolata也ok...
+问了骨感说回去在自己电脑上试试，stackoverflow上也问了个问题，等回答
+
+2015-04-12 18:57:29
+恩... 换成consolas了(vim的也跟着换了)，，暂时就当问题不存在吧，想不到什么好的途径去找解决办法
